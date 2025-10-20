@@ -1,28 +1,35 @@
+import os
 import requests
 import pandas as pd
 from sqlalchemy import create_engine
+from dotenv import load_dotenv
 
-API_KEY = "a3412d78914c8dc3bc75717690edd500"
+load_dotenv()
+API_KEY = os.getenv("API_KEY")  
+
+
 CIUDADES = "Arequipa,PE"
 
 def extraer_datos(ciudad):
-    url = f"http://api.openweathermap.org/data/2.5/weather?q={ciudad}&appid=[API_KEY]&units=metric"
-    
+    url = f"https://api.openweathermap.org/data/2.5/weather?q={ciudad}&appid={API_KEY}&units=metric"
+    print(url)
     r = requests.get(url)
+    print(f"Status Code: {r.status_code}")
+    print(f"Respuesta: {r.text}")
     return r.json()
 
 def transformar_datos(json_data):
     return {
-        "Ciudad": json_data["name"],
+        "Ciudad": json_data.get("name","NN"),
         "Temperatura" : json_data["main"]["temp"],
         "Humedad":json_data["main"]["humidity"],
         "Description":json_data["weather"][0]["description"],
-        "viento":json_data["wind"]["speed"]
+        "Viento":json_data["wind"]["speed"]
     }
     
 def cargar(df):
     engine = create_engine('sqlite:///clima.db', echo=True)
-    df.to_sql('clima', con=engine, if_exists='repalce', index = False)
+    df.to_sql('clima', con=engine, if_exists='replace', index = False)
     
 def main():
     data = [transformar_datos(extraer_datos(CIUDADES))]
