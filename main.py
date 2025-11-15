@@ -21,7 +21,8 @@ def extraer_datos(ciudad):
         r.raise_for_status()
         data=r.json()
         
-        timestamp= datetime.now().strftime("%Y-%m-%d_%H:%M:%S")
+        timestamp= datetime.now().strftime("%Y-%m-%d_%H%M%S")
+        ciudad =ciudad.replace(",","_")
         path=f"data/raw/{ciudad}_{timestamp}.json"
         os.makedirs("data/raw",exist_ok=True)
         
@@ -46,7 +47,7 @@ def transformar_datos(json_data):
     
 def cargar(df):
     engine = create_engine('sqlite:///clima.db', echo=True)
-    df.to_sql('clima', con=engine, if_exists='replace', index = False)
+    df.to_sql('clima', con=engine, if_exists='append', index = False)
     
 def main():
     data = [transformar_datos(extraer_datos(CIUDADES))]

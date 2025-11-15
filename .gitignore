@@ -2,3 +2,5 @@ venv/
 clima.db
 __pycache__/
 .env
+data/raw/
+data/processed/
