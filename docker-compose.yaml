@@ -1,0 +1,47 @@
+version: "3.8"
+
+services:
+  postgres:
+    image: postgres:15
+    container_name: airflow_postgres
+    environment:
+      POSTGRES_USER: airflow
+      POSTGRES_PASSWORD: airflow
+      POSTGRES_DB: airflow
+    volumes:
+      postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5433:5432"
+  airflow-webserver:
+    image: apache/airflow-2/2.8.2  
+    container_name: airflow.webserver
+    depends_on:
+      - postgres
+    environment:
+      AIRFLOW_CORE_EXECUTION: LocalExecutor
+      AIRFLOW_CORE_SQL_ALCHEMY_CONN: postgresql+psycopg2://airflow:airflow@postgres:5432/airflow
+    volumes:
+      - ./dag:/opt/airflow/dags
+      - ./src:/opt/airflow/src
+      - ./requirements.txt:/opt/airflow/requirements.txt
+    ports:
+      - "8080:8080"
+    commands: webserver
+
+  airflow_scheduler:
+    iamge: apache/airflow-2.9.2
+    container_name: airflow.scheduler
+    depends_on:
+      - postgres
+    environment:
+      AIRFLOW_CORE_EXECUTION: LocalExecutor
+      AIRFLOW_CORE_SQL_ALCHEMY_CONN: postgresql+psycopg2://airflow:airflow@postgres:5432/airflow
+    volumes:
+    - ./dags:/opt/airflow/dags
+    - ./src:/opt/airflow/src
+    - ./requirements.txt:/opt/airflow/requirements.txt
+    commands: scheduler
+
+volumes:
+  postgres_data:
+

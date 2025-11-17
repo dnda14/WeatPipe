@@ -2,5 +2,9 @@ venv/
 clima.db
 __pycache__/
 .env
+data/
 data/raw/
 data/processed/
+# Archivos de Airflow generados
+airflow/
+*.db
