@@ -10,5 +10,5 @@ select
     cast("Humedad" as integer) as humedad,
     "Description" as descripcion,
     cast("Viento" as numeric(5,2)) as velocidad_viento,
-    current_timestamp as fec_extraccion
+    "fecha_extraccion" as fecha_extraccion
 from raw

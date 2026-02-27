@@ -1,5 +1,6 @@
 import pandas as pd
 import logging
+from datetime import datetime
 
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
@@ -28,7 +29,8 @@ def transformar_datos(json_data):
             "Temperatura": temperatura,
             "Humedad": humedad,
             "Description": json_data["weather"][0]["description"],
-            "Viento": json_data["wind"]["speed"]
+            "Viento": json_data["wind"]["speed"],
+            "fecha_extraccion": datetime.now()
         }])
         
         logging.info(f"Data successfully transformed and validated for {ciudad}.")

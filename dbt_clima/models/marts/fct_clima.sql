@@ -14,6 +14,6 @@ select
     s.humedad,
     s.velocidad_viento,
     s.descripcion,
-    s.fec_extraccion
+    s.fecha_extraccion
 from stg_data s
 join ciudades c on s.ciudad = c.nombre_ciudad
