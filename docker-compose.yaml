@@ -23,6 +23,7 @@ services:
       - ./dags:/opt/airflow/dags
       - ./src:/opt/airflow/src
       - ./requirements.txt:/opt/airflow/requirements.txt
+      - ./dbt_clima:/opt/airflow/dbt_clima
   airflow-webserver:
     image: apache/airflow:2.9.2  
     env_file:
@@ -38,6 +39,7 @@ services:
       - ./dags:/opt/airflow/dags
       - ./src:/opt/airflow/src
       - ./requirements.txt:/opt/airflow/requirements.txt
+      - ./dbt_clima:/opt/airflow/dbt_clima
     ports:
       - "8080:8080"
     command: bash -c "pip install -r /opt/airflow/requirements.txt && airflow webserver"
@@ -52,6 +54,9 @@ services:
         - action: sync
           path: ./src
           target: /opt/airflow/src
+        - action: sync
+          path: ./dbt_clima
+          target: /opt/airflow/dbt_clima
 
     env_file:
       - .env
@@ -66,6 +71,7 @@ services:
     - ./dags:/opt/airflow/dags
     - ./src:/opt/airflow/src
     - ./requirements.txt:/opt/airflow/requirements.txt
+    - ./dbt_clima:/opt/airflow/dbt_clima
     command: bash -c "pip install -r /opt/airflow/requirements.txt && airflow scheduler"
 
 volumes:

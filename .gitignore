@@ -8,3 +8,8 @@ data/processed/
 # Archivos de Airflow generados
 airflow/
 *.db
+
+# Archivos generados por dbt
+dbt_clima/target/
+dbt_clima/dbt_packages/
+dbt_clima/logs/

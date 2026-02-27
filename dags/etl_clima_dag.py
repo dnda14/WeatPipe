@@ -3,6 +3,7 @@ sys.path.append("/opt/airflow")
 
 from airflow import DAG
 from airflow.operators.python import PythonOperator
+from airflow.operators.bash import BashOperator
 from datetime import datetime
 
 from src.extract import extraer_datos
@@ -21,7 +22,8 @@ def run_etl_ciudad(ciudad):
 with DAG(
     dag_id="etl_clima_dag",
     start_date=datetime(2025,11,16),
-    schedule_interval = "*/10 * * * *",
+    # Ejecutar cada 30 minutos. Para ejecutar cada hora usar: "0 * * * *"
+    schedule_interval = "*/30 * * * *",
     catchup = False,
     
 ) as dag:
@@ -35,3 +37,10 @@ with DAG(
     
         tareas.append(tarea)
         
+    dbt_run = BashOperator(
+        task_id="run_dbt_models",
+        bash_command="dbt run --project-dir /opt/airflow/dbt_clima --profiles-dir /opt/airflow/dbt_clima"
+    )
+
+    for tarea in tareas:
+        tarea >> dbt_run

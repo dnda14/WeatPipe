@@ -1,4 +1,7 @@
+import time
+
 import pandas as pd
+
 from extract import extraer_datos, CIUDADES
 from transform import transformar_datos
 from load import cargar
@@ -22,11 +25,14 @@ def main():
     
     print(f"\n=== Total de DataFrames: {len(data)} ===")
     if data:
-        # Properly concatenate all DataFrames
         df = pd.concat(data, ignore_index=True)
         print(f"\n=== DataFrame Final ({len(df)} filas) ===")
         print(df)           
         cargar(df)
     
 if __name__ == "__main__":
-    main()
+    while True:
+        print("\n=== Ejecutando ETL ===")
+        main()
+        print("Esperando 1 hora...\n")
+        time.sleep(3600)
